@@ -18,6 +18,9 @@ public:
 private:
 	void processEvents();
 	void InitVerts();
+	void setPoint(int v, int p);
+	void setPoints();
+	void setColour(int v, float r, float g, float b);
 
 	Window window;
 	bool isRunning = false;
@@ -41,3 +44,4 @@ private:
 	float rotationAngle = 0.0f;
 	MyVector3D vert[8];
 };
+

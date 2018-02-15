@@ -26,6 +26,7 @@ void Game::run()
 				isRunning = false;
 			}
 		}
+		processEvents();
 		update();
 		render();
 	}
@@ -86,15 +87,17 @@ void Game::processEvents()
 
 void Game::InitVerts()
 {
-	vert[0] = MyVector3D(.25f, .25f, .25f); //front top right
-	vert[1] = MyVector3D(-.25f, .25f, .25f); //front bottom right
-	vert[2] = MyVector3D(-.25f, -.25f, .25f); //front bottom left
-	vert[3] = MyVector3D(.25f, -.25f, .25f); //front top left
-	vert[4] = MyVector3D(.25f, .25f, -.25f); //back top right
-	vert[5] = MyVector3D(-.25f, .25f, -.25f); //back bottom right
-	vert[6] = MyVector3D(-.25f, -.25f, -.25f); //back bottom left
-	vert[7] = MyVector3D(.25f, -.25f, -.25f); //back top left
+	vert[0] = MyVector3D(.25f, .25f, .5); //front top right
+	vert[1] = MyVector3D(-.25f, .25f, .5); //front bottom right
+	vert[2] = MyVector3D(-.25f, -.25f, .5); //front bottom left
+	vert[3] = MyVector3D(.25f, -.25f, .5); //front top left
+	vert[4] = MyVector3D(.25f, .25f, 0); //back top right
+	vert[5] = MyVector3D(-.25f, .25f, 0); //back bottom right
+	vert[6] = MyVector3D(-.25f, -.25f, 0); //back bottom left
+	vert[7] = MyVector3D(.25f, -.25f, 0); //back top left
 }
+
+
 
 typedef struct
 {
@@ -109,8 +112,101 @@ GLubyte triangles[36];
 GLuint vbo[1];
 GLuint index;
 
+void Game::setPoint(int v, int p)
+{
+	vertex[v].coordinate[0] = vert[p].X();
+	vertex[v].coordinate[1] = vert[p].Y();
+	vertex[v].coordinate[2] = vert[p].Z();
+}
+
+void Game::setPoints()
+{
+	//back
+	setPoint(0, 6);
+	setPoint(1, 5);
+	setPoint(2, 7);
+
+	setPoint(3, 7);
+	setPoint(4, 4);
+	setPoint(5, 5);
+
+	//top
+	setPoint(6, 7);
+	setPoint(7, 4);
+	setPoint(8, 0);
+
+	setPoint(9, 0);
+	setPoint(10, 3);
+	setPoint(11, 7);
+
+	//front
+	setPoint(12, 3);
+	setPoint(13, 2);
+	setPoint(14, 1);
+
+	setPoint(15, 0);
+	setPoint(16, 3);
+	setPoint(17, 1);
+
+	//bottom
+	setPoint(18, 1);
+	setPoint(19, 2);
+	setPoint(20, 5);
+
+	setPoint(21, 5);
+	setPoint(22, 6);
+	setPoint(23, 2);
+
+	//left
+	setPoint(24, 3);
+	setPoint(25, 6);
+	setPoint(26, 7);
+
+	setPoint(27, 3);
+	setPoint(28, 6);
+	setPoint(29, 2);
+
+	//right
+	setPoint(30, 0);
+	setPoint(31, 5);
+	setPoint(32, 4);
+
+	setPoint(33, 0);
+	setPoint(34, 5);
+	setPoint(35, 1);
+}
+
+void Game::setColour(int v, float r, float g, float b)
+{
+	vertex[v * 6 + 0].color[0] = r;
+	vertex[v * 6 + 0].color[1] = g;
+	vertex[v * 6 + 0].color[2] = b;
+
+	vertex[v * 6 + 1].color[0] = r;
+	vertex[v * 6 + 1].color[1] = g;
+	vertex[v * 6 + 1].color[2] = b;
+
+	vertex[v * 6 + 2].color[0] = r;
+	vertex[v * 6 + 2].color[1] = g;
+	vertex[v * 6 + 2].color[2] = b;
+
+	vertex[v * 6 + 3].color[0] = r;
+	vertex[v * 6 + 3].color[1] = g;
+	vertex[v * 6 + 3].color[2] = b;
+
+	vertex[v * 6 + 4].color[0] = r;
+	vertex[v * 6 + 4].color[1] = g;
+	vertex[v * 6 + 4].color[2] = b;
+
+	vertex[v * 6 + 5].color[0] = r;
+	vertex[v * 6 + 5].color[1] = g;
+	vertex[v * 6 + 5].color[2] = b;
+}
+
 void Game::initialize()
 {
+	InitVerts();
+
 	isRunning = true;
 
 	glewInit();
@@ -119,60 +215,19 @@ void Game::initialize()
 
 	// 0 7 3
 
-	vertex[0].coordinate[0] = vert[0].X();
-	vertex[0].coordinate[1] = vert[0].Y();
-	vertex[0].coordinate[2] = vert[0].Z();
+	setPoints();
 
-	vertex[1].coordinate[0] = vert[7].X();
-	vertex[1].coordinate[1] = vert[7].Y();
-	vertex[1].coordinate[2] = vert[7].Z();
+	/*vertex[0].coordinate[0] = -0.5f;
+	vertex[0].coordinate[1] = -0.5f;
+	vertex[0].coordinate[2] = 0.0f;
 
-	vertex[2].coordinate[0] = vert[3].X();
-	vertex[2].coordinate[1] = vert[3].Y();
-	vertex[2].coordinate[2] = vert[3].Z();
+	vertex[1].coordinate[0] = -0.5f;
+	vertex[1].coordinate[1] = 0.5f;
+	vertex[1].coordinate[2] = 0.0f;
 
-	//--
-
-	vertex[3].coordinate[0] = vert[0].X();
-	vertex[3].coordinate[1] = vert[0].Y();
-	vertex[3].coordinate[2] = vert[0].Z();
-
-	vertex[4].coordinate[0] = vert[4].X();
-	vertex[4].coordinate[1] = vert[4].Y();
-	vertex[4].coordinate[2] = vert[4].Z();
-
-	vertex[5].coordinate[0] = vert[7].X();
-	vertex[5].coordinate[1] = vert[7].Y();
-	vertex[5].coordinate[2] = vert[7].Z();
-
-	//--
-
-	vertex[6].coordinate[0] = vert[3].X();
-	vertex[6].coordinate[1] = vert[3].Y();
-	vertex[6].coordinate[2] = vert[3].Z();
-
-	vertex[7].coordinate[0] = vert[2].X();
-	vertex[7].coordinate[1] = vert[2].Y();
-	vertex[7].coordinate[2] = vert[2].Z();
-
-	vertex[8].coordinate[0] = vert[1].X();
-	vertex[8].coordinate[1] = vert[1].Y();
-	vertex[8].coordinate[2] = vert[1].Z();
-
-	//--
-
-	vertex[9].coordinate[0] = vert[3].X();
-	vertex[9].coordinate[1] = vert[3].Y();
-	vertex[9].coordinate[2] = vert[3].Z();
-
-	vertex[10].coordinate[0] = vert[0].X();
-	vertex[10].coordinate[1] = vert[0].Y();
-	vertex[10].coordinate[2] = vert[0].Z();
-
-	vertex[11].coordinate[0] = vert[1].X();
-	vertex[11].coordinate[1] = vert[1].Y();
-	vertex[11].coordinate[2] = vert[1].Z();
-
+	vertex[2].coordinate[0] = 0.5f;
+	vertex[2].coordinate[1] = 0.5f;
+	vertex[2].coordinate[2] = 0.0f;*/
 
 	//vertex[3].coordinate[0] = 0.5f; 
 	//vertex[3].coordinate[1] = 0.5f;  
@@ -186,33 +241,15 @@ void Game::initialize()
 	//vertex[5].coordinate[1] = -0.5f;  
 	//vertex[5].coordinate[2] = 0.0f;
 
-	vertex[0].color[0] = 0.1f;
-	vertex[0].color[1] = 1.0f;
-	vertex[0].color[2] = 0.0f;
+	setColour(0, 1.0f, 0.0f, 0.0f);
+	setColour(1, 0.0f, 1.0f, 0.0f);
+	setColour(2, 0.0f, 0.0f, 1.0f);
+	setColour(3, 1.0f, 1.0f, 0.0f);
+	setColour(4, 1.0f, 0.0f, 1.0f);
+	setColour(5, 0.0f, 1.0f, 1.0f);
+	setColour(6, 0.5f, 0.1f, 0.3f);
+	setColour(7, 0.8f, 0.1f, 0.9f);
 
-	vertex[1].color[0] = 0.2f;
-	vertex[1].color[1] = 1.0f;
-	vertex[1].color[2] = 0.0f;
-
-	vertex[2].color[0] = 0.3f;
-	vertex[2].color[1] = 1.0f;
-	vertex[2].color[2] = 0.0f;
-
-	vertex[3].color[0] = 0.4f;
-	vertex[3].color[1] = 1.0f;
-	vertex[3].color[2] = 0.0f;
-
-	vertex[4].color[0] = 0.5f;
-	vertex[4].color[1] = 1.0f;
-	vertex[4].color[2] = 0.0f;
-
-	vertex[5].color[0] = 0.6f;
-	vertex[5].color[1] = 1.0f;
-	vertex[5].color[2] = 0.0f;
-
-	vertex[6].color[0] = 0.6f;
-	vertex[6].color[1] = 1.0f;
-	vertex[6].color[2] = 0.0f;
 
 	vertex[7].color[0] = 0.6f;
 	vertex[7].color[1] = 1.0f;
@@ -268,20 +305,19 @@ void Game::update()
 			flip = false;
 	}
 
-	if (flip)
+	for (int i = 0; i < 8; i++)
 	{
-		rotationAngle += 0.005f;
+		vert[i] = MyMatrix3::translation(transX, transY) * vert[i];
 
-		if (rotationAngle > 360.0f)
-		{
-			rotationAngle -= 360.0f;
-		}
+		vert[i] = MyMatrix3::rotationX(angleX * 0.0174533) * vert[i];
+		vert[i] = MyMatrix3::rotationY(angleY * 0.0174533) * vert[i];
+
+		vert[i] = MyMatrix3::scale(scaleX, scaleY) * vert[i];
 	}
 
+	setPoints();
+
 	//Change vertex data
-	vertex[0].coordinate[0] += -0.0001f;
-	vertex[0].coordinate[1] += -0.0001f;
-	vertex[0].coordinate[2] += -0.0001f;
 
 	cout << "Update up" << endl;
 }
